@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    static String[] shuffledDeck;  // Global deck variable
+    static String[] deck;  // Global deck variable
     static int topCardIndex;       // Index of the top card in the deck
     public static boolean isDeckOutOfCards = false; // Global flag to indicate deck status
 
@@ -13,7 +13,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
 
         while (true) { // Infinite loop to keep playing new games
-            shuffledDeck = deckMaker(); // Shuffle deck at the start of each game
+            deckMaker(); // Shuffle deck at the start of each game
             topCardIndex = 0;           // Reset the top card index for each new game
             isDeckOutOfCards = false;   // Reset the flag for the new game
             playGame(input);
@@ -38,7 +38,7 @@ public class Main {
     }
     public static void playGame(Scanner input) {
 
-        shuffledDeck = deckMaker(); // Initialize and shuffle a new deck
+        deckMaker(); // Initialize and shuffle a new deck
         topCardIndex = 0; // Reset the top card index
         ArrayList<String> userHand = new ArrayList<>();
         ArrayList<String> dealerHand = new ArrayList<>();
@@ -52,8 +52,8 @@ public class Main {
         int userScore = checkScore(userHand);
         System.out.println("Your hand: " + userHand + " (score: " + userScore + ")");
         if (userScore == 21){
-            System.out.println("Blackjack!");
-            return;
+            System.out.println("You got Blackjack!");
+
         }
         System.out.println("Dealer's hand: " + dealerHand);
 
@@ -107,10 +107,10 @@ public class Main {
         //input.close(); // Close the scanner when done to avoid resource leaks.
     }
 
-    public static String[] deckMaker() {
+    public static void deckMaker() {
         String[] suit = {"S", "D", "C", "H"};
         String[] rank = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-        String[] deck = new String[52];
+        deck = new String[52];
 
         // Creates the deck
         for (int i = 0; i < deck.length; i++) {
@@ -118,7 +118,7 @@ public class Main {
             // System.out.println(deck[i]);
         }
 
-        // Shuffle the deck
+        // Shuffles the deck
         for (int i = 0; i < deck.length; i++) {
             int index = (int) (Math.random() * deck.length);
 
@@ -127,12 +127,11 @@ public class Main {
             deck[index] = temp;
 
         }
-        return deck;
     }
     public static ArrayList<String> hit(ArrayList<String> userHand) {
 
-        if (topCardIndex < shuffledDeck.length) {
-            String drawnCard = shuffledDeck[topCardIndex];
+        if (topCardIndex < deck.length) {
+            String drawnCard = deck[topCardIndex];
             userHand.add(drawnCard);
             topCardIndex++;  // Move to the next card in the deck
         } else {
