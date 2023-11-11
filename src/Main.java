@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("♣\uFE0F Welcome to The Code Research Lab Casino ♣\uFE0F");
+        System.out.println("♣️ Welcome to The Code Research Lab Casino ♣️");
         Scanner input = new Scanner(System.in);
 
         while (true) { // Infinite loop to keep playing new games
@@ -38,21 +38,21 @@ public class Main {
     }
     public static void playGame(Scanner input) {
 
-        deckMaker(); // Initialize and shuffle a new deck
+        //deckMaker(); // Initialize and shuffle a new deck
         topCardIndex = 0; // Reset the top card index
         ArrayList<String> userHand = new ArrayList<>();
         ArrayList<String> dealerHand = new ArrayList<>();
 
-        userHand = hit(userHand);
-        userHand = hit(userHand);
+        hit(userHand);
+        hit(userHand);
 
-        dealerHand = hit(dealerHand);
+        hit(dealerHand);
 
 
         int userScore = checkScore(userHand);
         System.out.println("Your hand: " + userHand + " (score: " + userScore + ")");
         if (userScore == 21){
-            System.out.println("You got Blackjack!");
+            System.out.println("Blackjack!");
 
         }
         System.out.println("Dealer's hand: " + dealerHand);
@@ -66,6 +66,12 @@ public class Main {
 
             if ("h".equals(str)) {
                 userHand = hit(userHand);
+                if (isDeckOutOfCards) {
+                    // Deck is out of cards, reshuffle it
+                    deckMaker();
+                    topCardIndex = 0;
+                    System.out.println("Deck has been reshuffled.");
+                }
                 userScore = checkScore(userHand);
                 System.out.println("Your hand: " + userHand + " (score: " + userScore + ")");
                 if (userScore > 21) {
@@ -83,7 +89,7 @@ public class Main {
             int dealerScore = checkScore(dealerHand);
             System.out.println("Dealer's hand: " + dealerHand + " (score: " + dealerScore + ")");
             while (dealerScore < 17) {
-                dealerHand = hit(dealerHand);
+                hit(dealerHand);
                 dealerScore = checkScore(dealerHand);
                 System.out.println("Dealer's hand: " + dealerHand + " (score: " + dealerScore + ")");
                 if (dealerScore > 21) {
@@ -108,7 +114,7 @@ public class Main {
     }
 
     public static void deckMaker() {
-        String[] suit = {"S", "D", "C", "H"};
+        String[] suit = {"♠", "♦", "♣", "♥"};
         String[] rank = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
         deck = new String[52];
 
