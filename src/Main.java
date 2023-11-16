@@ -2,76 +2,54 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    static String[] deck;  // Global deck variable
-    static int topCardIndex;       // Index of the top card in the deck
-    public static boolean isDeckOutOfCards = false; // Global flag to indicate deck status
-
+    static String[] deck; // Global deck variable
+    static int topCardIndex; // Index of the top card in the deck
 
     public static void main(String[] args) {
-
         System.out.println("♣️ Welcome to The Code Research Lab Casino ♣️");
         Scanner input = new Scanner(System.in);
+        String answer;
 
-        while (true) { // Infinite loop to keep playing new games
-            deckMaker(); // Shuffle deck at the start of each game
-            topCardIndex = 0;           // Reset the top card index for each new game
-            isDeckOutOfCards = false;   // Reset the flag for the new game
+        // Initialize and shuffle the deck only once at the start
+        deckMaker();
+        topCardIndex = 0;
+
+        do {
             playGame(input);
 
-            if (!isDeckOutOfCards) {
-                // If the game ended normally (not because the deck was out of cards)
-                System.out.println("----------------------------------------------");
-                System.out.println("Do you want to play again? (y or n)");
-                String answer = input.nextLine().trim().toLowerCase();
-                if ("y".equals(answer)) {
-                    //continues
-                } else if ("n".equals(answer)) {
-                    System.out.println("Remember, 99% of gamblers quit before winning big.");
-                    System.out.println("Exiting...");
-                    return; // Exit the method, ending the program
-                } else {
-                    System.out.println("Invalid input. Please type 'y' or 'n'.");
-                }
-            }
-        }
+            System.out.println("----------------------------------------------");
+            System.out.println("Do you want to play again? (y or n)");
+            answer = input.nextLine().trim().toLowerCase();
 
+        } while ("y".equals(answer));
+
+        System.out.println("Remember, 99% of gamblers quit before winning big.");
+        System.out.println("Exiting...");
+        input.close();
     }
     public static void playGame(Scanner input) {
-
-        //deckMaker(); // Initialize and shuffle a new deck
-        topCardIndex = 0; // Reset the top card index
         ArrayList<String> userHand = new ArrayList<>();
         ArrayList<String> dealerHand = new ArrayList<>();
 
+        //starting hand for user and dealer
         hit(userHand);
         hit(userHand);
-
         hit(dealerHand);
-
 
         int userScore = checkScore(userHand);
         System.out.println("Your hand: " + userHand + " (score: " + userScore + ")");
-        if (userScore == 21){
+        if (userScore == 21) {
             System.out.println("Blackjack!");
-
         }
         System.out.println("Dealer's hand: " + dealerHand);
 
-        //Scanner input = new Scanner(System.in);
         boolean userTurn = true;
-
         while (userTurn) {
             System.out.println("Hit or Stay? (h or s)");
             String str = input.nextLine().trim().toLowerCase();
 
             if ("h".equals(str)) {
-                userHand = hit(userHand);
-                if (isDeckOutOfCards) {
-                    // Deck is out of cards, reshuffle it
-                    deckMaker();
-                    topCardIndex = 0;
-                    System.out.println("Deck has been reshuffled.");
-                }
+                hit(userHand);
                 userScore = checkScore(userHand);
                 System.out.println("Your hand: " + userHand + " (score: " + userScore + ")");
                 if (userScore > 21) {
@@ -79,7 +57,7 @@ public class Main {
                     break;
                 }
             } else if ("s".equals(str)) {
-                break;
+                userTurn = false;
             } else {
                 System.out.println("Invalid input. Please type 'h' or 's'.");
             }
@@ -95,7 +73,7 @@ public class Main {
                 if (dealerScore > 21) {
                     System.out.println("Dealer busts!");
                     System.out.println("You win!");
-                    break;
+                    return;
                 }
             }
 
@@ -109,8 +87,6 @@ public class Main {
                 }
             }
         }
-
-        //input.close(); // Close the scanner when done to avoid resource leaks.
     }
 
     public static void deckMaker() {
@@ -121,39 +97,34 @@ public class Main {
         // Creates the deck
         for (int i = 0; i < deck.length; i++) {
             deck[i] = rank[i % 13] + suit[i / 13];
-            // System.out.println(deck[i]);
         }
 
-        // Shuffles the deck
-        for (int i = 0; i < deck.length; i++) {
-            int index = (int) (Math.random() * deck.length);
-
+        // Fisher-Yates shuffle algorithm
+        for (int i = deck.length - 1; i > 0; i--) {
+            int index = (int) (Math.random() * (i + 1)); // Random index from 0 to i
             String temp = deck[i];
             deck[i] = deck[index];
             deck[index] = temp;
-
         }
     }
-    public static ArrayList<String> hit(ArrayList<String> userHand) {
 
-        if (topCardIndex < deck.length) {
-            String drawnCard = deck[topCardIndex];
-            userHand.add(drawnCard);
-            topCardIndex++;  // Move to the next card in the deck
-        } else {
-            // Handle the case where the deck is empty (e.g., print a message or end the game)
-            System.out.println("The deck is out of cards!");
-            isDeckOutOfCards = true;
+    public static void hit(ArrayList<String> hand) {
+        if (topCardIndex >= deck.length) {
+            System.out.println("The deck is out of cards, reshuffling...");
+            deckMaker();
+            topCardIndex = 0;
         }
 
-        return userHand;
+        String drawnCard = deck[topCardIndex];
+        hand.add(drawnCard);
+        topCardIndex++;
     }
 
-    public static int checkScore(ArrayList<String> userHand) {
+    public static int checkScore(ArrayList<String> hand) {
         int score = 0;
         int aces = 0; // Keep track of Aces
 
-        for (String card : userHand) {
+        for (String card : hand) {
             int cardValue;
             if (card.startsWith("A")) {
                 cardValue = 11; // Assume Ace is 11 initially
@@ -173,7 +144,7 @@ public class Main {
         }
 
         return score;
-
     }
 }
 
+//TODO: Make OOP for readability sake
