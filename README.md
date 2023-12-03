@@ -19,7 +19,7 @@ To play the game, clone the repository and run the `Main` class. Java must be in
 
 ```bash
 git clone <https://github.com/NoahBakayou/BlackJack>
-cd <Blackjack>
+cd <BlackJack>
 java Main.java
 ```
 ## Contributions
