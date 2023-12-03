@@ -18,8 +18,8 @@ This project is a text-based Blackjack game implemented in Java. It demonstrates
 To play the game, clone the repository and run the `Main` class. Java must be installed on your machine.
 
 ```bash
-git clone <URL_TO_REPOSITORY>
-cd <REPOSITORY_NAME>
+git clone <[URL_TO_REPOSITORY](https://github.com/NoahBakayou/BlackJack)>
+cd <Blackjack>
 java Main.java
 ```
 ## Contributions
